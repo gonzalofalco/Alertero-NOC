@@ -1,14 +1,7 @@
 #!/bin/bash
+# Punto de entrada para instalación de Alertero
+# Redirige al script de bootstrap completo
 set -e
-cd /opt/alertero
 
-echo "Creando proyecto Alertero en /opt/alertero..."
-
-# Ya tenemos la estructura de directorios creada
-# Vamos a crear todos los archivos...
-
-echo "Este script creará todos los archivos necesarios"
-echo "Presiona CTRL+C para cancelar o ENTER para continuar..."
-read
-
-echo "✓ Proyecto base listo. Ahora descarga los archivos desde el repositorio o créalos manualmente."
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+exec "$SCRIPT_DIR/scripts/bootstrap.sh" "$@"
