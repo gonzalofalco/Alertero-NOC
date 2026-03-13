@@ -96,8 +96,8 @@ cp "$ENV_FILE" "$PROJECT_DIR/.env"
 echo ""
 echo "4. Building y levantando servicios..."
 cd "$PROJECT_DIR"
-docker compose build
-docker compose up -d
+docker-compose build
+docker-compose up -d
 
 echo "  Esperando a que los servicios estén listos..."
 sleep 10
@@ -106,13 +106,13 @@ sleep 10
 echo ""
 echo "5. Verificando salud de servicios..."
 for i in {1..30}; do
-    if docker compose exec -T backend curl -sf http://localhost:8000/api/health/live > /dev/null 2>&1; then
+    if docker-compose exec -T backend curl -sf http://localhost:8000/api/health/live > /dev/null 2>&1; then
         echo "  ✓ Backend healthy"
         break
     fi
     if [ $i -eq 30 ]; then
         echo "  ✗ Backend no respondió"
-        docker compose logs backend
+        docker-compose logs backend
         exit 1
     fi
     sleep 2
