@@ -302,7 +302,7 @@ services:
     container_name: postgres
     environment:
       POSTGRES_USER: alertero
-      POSTGRES_PASSWORD: alertero123
+      POSTGRES_PASSWORD: <DB_PASSWORD>
       POSTGRES_DB: alertero
     volumes:
       - postgres_data:/var/lib/postgresql/data
@@ -314,7 +314,7 @@ services:
     build: ./backend
     container_name: backend
     environment:
-      DATABASE_URL: postgresql://alertero:alertero123@postgres:5432/alertero
+      DATABASE_URL: postgresql://alertero:<DB_PASSWORD>@postgres:5432/alertero
       WEBHOOK_SECRET: <WEBHOOK_SECRET>
     depends_on:
       - postgres
@@ -386,7 +386,7 @@ curl http://localhost:8080/api/health
 
 ```bash
 # Base de datos
-DATABASE_URL=postgresql://alertero:alertero123@postgres:5432/alertero
+DATABASE_URL=postgresql://alertero:<DB_PASSWORD>@postgres:5432/alertero
 
 # Webhook secret (generar nuevo token seguro)
 WEBHOOK_SECRET=<WEBHOOK_SECRET>
@@ -452,7 +452,7 @@ http {
 Name: Alertero
 Type: Webhook
 
-URL: http://192.168.112.111:8080/api/v1/webhook/grafana
+URL: http://<SERVER_IP>:8080/api/v1/webhook/grafana
 
 HTTP Method: POST
 
@@ -483,7 +483,7 @@ Labels:
 # Desde Grafana, usar "Test" en el contact point
 # O enviar manualmente:
 
-curl -X POST http://192.168.112.111:8080/api/v1/webhook/grafana \
+curl -X POST http://<SERVER_IP>:8080/api/v1/webhook/grafana \
   -H "Authorization: Bearer <WEBHOOK_SECRET>" \
   -H "Content-Type: application/json" \
   -d '{
@@ -509,7 +509,7 @@ curl -X POST http://192.168.112.111:8080/api/v1/webhook/grafana \
 
 ### Acceso
 
-Abrir navegador en: **http://192.168.112.111:8080**
+Abrir navegador en: **http://<SERVER_IP>:8080**
 
 ### Dashboard Principal
 
@@ -862,9 +862,9 @@ docker exec postgres psql -U alertero -d alertero -c "SELECT count(*) FROM pg_st
 
 **Información del Servidor:**
 - **Hostname:** CGSNOCPRBE001
-- **IP:** 192.168.112.111
+- **IP:** <SERVER_IP>
 - **Puerto:** 8080
-- **URL:** http://192.168.112.111:8080
+- **URL:** http://<SERVER_IP>:8080
 
 **Capacidad:**
 - Base de datos escalable
