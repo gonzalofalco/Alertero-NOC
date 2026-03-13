@@ -1,0 +1,25 @@
+        {/* LABELS SECUNDARIOS: HUB, System Name, Puerto (SIN GRUPO) */}
+        {(alert.labels?.HUB || alert.labels?.system_name || alert.labels?.puerto || alert.labels?.port || alert.labels?.port_port_id) && (
+          <div className="flex items-center gap-2 flex-wrap mb-4">
+            {/* HUB */}
+            {alert.labels?.HUB && (
+              <span className={`inline-flex items-center px-2.5 py-1 rounded-lg text-xs ${darkMode ? 'bg-cyan-900/40 text-cyan-300 border border-cyan-700/40' : 'bg-cyan-50 text-cyan-700 border border-cyan-200'}`}>
+                📍 {alert.labels.HUB}
+              </span>
+            )}
+
+            {/* System Name */}
+            {alert.labels?.system_name && (
+              <span className={`inline-flex items-center px-2.5 py-1 rounded-lg text-xs ${darkMode ? 'bg-indigo-900/40 text-indigo-300 border border-indigo-700/40' : 'bg-indigo-50 text-indigo-700 border border-indigo-200'}`}>
+                💻 {alert.labels.system_name}
+              </span>
+            )}
+
+            {/* Puerto (port_port_id, puerto o port) */}
+            {(alert.labels?.port_port_id || alert.labels?.puerto || alert.labels?.port) && (
+              <span className={`inline-flex items-center px-2.5 py-1 rounded-lg text-xs ${darkMode ? 'bg-emerald-900/40 text-emerald-300 border border-emerald-700/40' : 'bg-emerald-50 text-emerald-700 border border-emerald-200'}`}>
+                🔌 {alert.labels?.port_port_id || alert.labels?.puerto || alert.labels?.port}
+              </span>
+            )}
+          </div>
+        )}

@@ -1,0 +1,132 @@
+export default function Dashboard({ stats, darkMode, onFilterClick }) {
+  if (!stats) return null
+
+  const metrics = [
+    {
+      label: 'TOTAL ALERTS',
+      value: stats.total || 0,
+      icon: '📊',
+      colorFrom: darkMode ? 'from-blue-600' : 'from-blue-500',
+      colorTo: darkMode ? 'to-indigo-700' : 'to-indigo-600',
+      glowColor: 'shadow-blue-500/30',
+      iconBg: darkMode ? 'bg-blue-500/20' : 'bg-blue-100',
+      textColor: 'text-white'
+    },
+    {
+      label: 'CRITICAL',
+      value: stats.critical || 0,
+      icon: '🔴',
+      colorFrom: darkMode ? 'from-red-600' : 'from-red-500',
+      colorTo: darkMode ? 'to-rose-700' : 'to-rose-600',
+      glowColor: 'shadow-red-500/30',
+      iconBg: darkMode ? 'bg-red-500/20' : 'bg-red-100',
+      textColor: 'text-white',
+      clickable: true,
+      filter: { severity: 'critical', status: 'firing' }
+    },
+    {
+      label: 'WARNINGS',
+      value: stats.warning || 0,
+      icon: '⚠️',
+      colorFrom: darkMode ? 'from-yellow-600' : 'from-yellow-500',
+      colorTo: darkMode ? 'to-amber-700' : 'to-amber-600',
+      glowColor: 'shadow-yellow-500/30',
+      iconBg: darkMode ? 'bg-yellow-500/20' : 'bg-yellow-100',
+      textColor: 'text-white',
+      clickable: true,
+      filter: { severity: 'warning', status: 'firing' }
+    },
+    {
+      label: 'FIRING',
+      value: stats.firing || 0,
+      icon: '🔥',
+      colorFrom: darkMode ? 'from-orange-600' : 'from-orange-500',
+      colorTo: darkMode ? 'to-red-700' : 'to-red-600',
+      glowColor: 'shadow-orange-500/30',
+      iconBg: darkMode ? 'bg-orange-500/20' : 'bg-orange-100',
+      textColor: 'text-white',
+      clickable: true,
+      filter: { status: 'firing' }
+    },
+    {
+      label: 'RESOLVED',
+      value: stats.resolved || 0,
+      icon: '✅',
+      colorFrom: darkMode ? 'from-green-600' : 'from-green-500',
+      colorTo: darkMode ? 'to-emerald-700' : 'to-emerald-600',
+      glowColor: 'shadow-green-500/30',
+      iconBg: darkMode ? 'bg-green-500/20' : 'bg-green-100',
+      textColor: 'text-white',
+      clickable: true,
+      filter: { status: 'resolved' }
+    },
+    {
+      label: 'ACKNOWLEDGED',
+      value: stats.acked || 0,
+      icon: '✓',
+      colorFrom: darkMode ? 'from-blue-600' : 'from-blue-500',
+      colorTo: darkMode ? 'to-cyan-700' : 'to-cyan-600',
+      glowColor: 'shadow-blue-500/30',
+      iconBg: darkMode ? 'bg-blue-500/20' : 'bg-blue-100',
+      textColor: 'text-white'
+    }
+  ]
+
+  return (
+    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-6">
+      {metrics.map((metric, idx) => (
+        <div
+          key={idx}
+          onClick={() => metric.clickable && onFilterClick(metric.filter)}
+          className={`
+            group relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl
+            bg-gradient-to-br ${metric.colorFrom} ${metric.colorTo}
+            transform transition-all duration-300
+            ${metric.clickable ? 'cursor-pointer hover:scale-105 hover:-translate-y-1' : ''}
+            hover:${metric.glowColor}
+            border border-white/10
+          `}
+          style={{
+            animationDelay: `${idx * 50}ms`
+          }}
+        >
+          {/* Animated gradient overlay */}
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+          
+          {/* Decorative circles */}
+          <div className="absolute -right-6 -top-6 w-20 h-20 bg-white/5 rounded-full blur-xl"></div>
+          <div className="absolute -left-4 -bottom-4 w-16 h-16 bg-white/5 rounded-full blur-lg"></div>
+          
+          <div className="relative p-5">
+            {/* Icon con backdrop */}
+            <div className="flex items-center justify-between mb-3">
+              <div className={`${metric.iconBg} backdrop-blur-sm rounded-xl p-2.5 shadow-lg`}>
+                <span className="text-2xl">{metric.icon}</span>
+              </div>
+              {metric.clickable && (
+                <div className="opacity-50 group-hover:opacity-100 transition-opacity">
+                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                  </svg>
+                </div>
+              )}
+            </div>
+            
+            {/* Value con efecto glow */}
+            <div className={`text-4xl font-black mb-2 ${metric.textColor} drop-shadow-lg group-hover:scale-110 transition-transform duration-300`}>
+              {metric.value}
+            </div>
+            
+            {/* Label mejorado */}
+            <div className={`text-xs font-bold uppercase tracking-wider ${metric.textColor} opacity-90 flex items-center`}>
+              {metric.label}
+            </div>
+          </div>
+          
+          {/* Bottom accent line */}
+          <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-white/40 to-transparent"></div>
+        </div>
+      ))}
+    </div>
+  )
+}

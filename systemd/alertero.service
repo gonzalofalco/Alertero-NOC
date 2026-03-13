@@ -1,0 +1,26 @@
+[Unit]
+Description=Alertero - Grafana Alerts Dashboard
+Documentation=https://github.com/yourcompany/alertero
+After=docker.service
+Requires=docker.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+WorkingDirectory=/home/neo/backup/opt/alertero
+
+# Start
+ExecStart=/usr/bin/docker compose up -d
+
+# Stop
+ExecStop=/usr/bin/docker compose down
+
+# Reload
+ExecReload=/usr/bin/docker compose restart
+
+# Restart policy
+Restart=on-failure
+RestartSec=10s
+
+[Install]
+WantedBy=multi-user.target

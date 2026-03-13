@@ -1,0 +1,52 @@
+version: '3.7'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: alertero-postgres
+    environment:
+      POSTGRES_USER: alertero
+      POSTGRES_PASSWORD: alertero123
+      POSTGRES_DB: alertero
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - alertero
+    restart: unless-stopped
+
+  backend:
+    image: alertero-backend
+    container_name: alertero-backend
+    environment:
+      DATABASE_URL: "postgresql://alertero:alertero123@postgres:5432/alertero"
+      WEBHOOK_SECRET: "${WEBHOOK_SECRET:?WEBHOOK_SECRET is required}"
+      ENVIRONMENT: "production"
+      LOG_LEVEL: "INFO"
+    depends_on:
+      - postgres
+    networks:
+      - alertero
+    restart: unless-stopped
+
+  nginx:
+    image: nginx:alpine
+    container_name: alertero-nginx
+    ports:
+      - "8080:80"
+    volumes:
+      - ./frontend/dist:/usr/share/nginx/html:ro
+      - ./nginx/alertero.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./nginx/locations.conf:/etc/nginx/locations.conf:ro
+    depends_on:
+      - backend
+    networks:
+      - alertero
+    restart: unless-stopped
+
+networks:
+  alertero:
+    driver: bridge
+
+volumes:
+  postgres_data:
+    external: true
